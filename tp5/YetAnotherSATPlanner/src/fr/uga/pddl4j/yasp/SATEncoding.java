@@ -69,7 +69,6 @@ public final class SATEncoding {
 
         // Encoding of init
         // Each fact is a unit clause
-        // Init state step is 1
         // We get the initial state from the planning problem
         // State is a bit vector where the ith bit at 1 corresponds to the ith fluent being true
         final int nb_fluents = problem.getFluents().size();
@@ -77,6 +76,37 @@ public final class SATEncoding {
         final BitVector init = problem.getInitialState().getPositiveFluents();
         
         // TO BE DONE!
+        for (int i = 0; i < nb_fluents; i++) {
+            if (init.get(i)) {
+                List<Integer> clause = new ArrayList<Integer>();
+                clause.add(pair(i + 1, 1));
+                this.initList.add(clause);
+            }
+            else{
+                List<Integer> clause = new ArrayList<Integer>();
+                clause.add(-pair(i + 1, 1));
+                this.initList.add(clause);
+            }
+        }
+
+        // Encoding of goal
+        // Goal state step is steps
+        // We get the goal state from the planning problem
+        // Goal is a bit vector where the ith bit at 1 corresponds to the ith fluent being true
+        final BitVector goal = problem.getGoal().getPositiveFluents();
+
+        for(int i = 0; i < nb_fluents; i++){
+            if (goal.get(i)) {
+                this.goalList.add(pair(i + 1, steps));
+            }
+            else{
+                this.goalList.add(-pair(i + 1, steps));
+            }
+        }
+        
+
+        // Encoding of actions
+
 
         // Makes DIMACS encoding from 1 to steps
         encode(1, steps);
@@ -175,6 +205,59 @@ public final class SATEncoding {
         this.currentDimacs.clear();
         
         // TO BE DONE!
+        // Encoding of init
+
+        for (List<Integer> clause : this.initList) {
+            List<Integer> newClause = new ArrayList<Integer>();
+            for (Integer x : clause) {
+                newClause.add(x);
+            }
+            this.currentDimacs.add(newClause);
+        }
+
+        // Encoding of actions
+
+        for (int i = 0; i < this.actionPreconditionList.size(); i++) {
+            List<Integer> clause = new ArrayList<Integer>();
+            for (Integer x : this.actionPreconditionList.get(i)) {
+                clause.add(pair(x, from));
+            }
+            for (Integer x : this.actionEffectList.get(i)) {
+                clause.add(pair(x, from + 1));
+            }
+            this.currentDimacs.add(clause);
+        }
+
+        // Encoding of action disjunctions
+ 
+        for (List<Integer> clause : this.actionDisjunctionList) {
+            List<Integer> newClause = new ArrayList<Integer>();
+            for (Integer x : clause) {
+                newClause.add(pair(x, from + 1));
+            }
+            this.currentDimacs.add(newClause);
+        }
+
+        // Encoding of state transitions
+  
+        for (int i = 0; i < this.stateTransitionList.size(); i++) {
+            List<Integer> clause = new ArrayList<Integer>();
+            for (Integer x : this.addList.get(i)) {
+                clause.add(pair(x, from + 1));
+            }
+            for (Integer x : this.delList.get(i)) {
+                clause.add(-pair(x, from + 1));
+            }
+            this.currentDimacs.add(clause);
+        }
+
+        // Encoding of goal
+
+        for (Integer x : this.goalList) {
+            this.currentGoal.add(pair(x, to));
+        }
+
+
 
         System.out.println("Encoding : successfully done (" + (this.currentDimacs.size()
                 + this.currentGoal.size()) + " clauses, " + to + " steps)");
