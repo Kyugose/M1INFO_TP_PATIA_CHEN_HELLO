@@ -27,9 +27,14 @@ Algorithm = Literal['bfs', 'dfs', 'astar']
 
 def solve_bfs(open : List[Node]) -> Solution:
     '''Solve the puzzle using the BFS algorithm'''
+    start_time = time.time()
     dimension = int(math.sqrt(len(open[0].get_state())))
     moves = [UP, DOWN, LEFT, RIGHT]
     while open:
+        current_time= time.time()
+        #arreter si la solution est trop longue
+        if current_time - start_time > 5:
+            return []
         node = open.pop(0)
         if is_goal(node.get_state()):
             return node.get_path()
@@ -55,7 +60,7 @@ def solve_dfs(open: List[Node]) -> Solution:
     while open:
         current_time= time.time()
         #arreter si la solution est trop longue
-        if current_time - start_time > 1:
+        if current_time - start_time > 5:
             return []
         node = open.pop(0)
         if is_goal(node.get_state()):
@@ -75,9 +80,14 @@ def solve_dfs(open: List[Node]) -> Solution:
 
 def solve_astar(open : List[Node], close : List[Node]) -> Solution:
     '''Solve the puzzle using the A* algorithm'''
+    start_time = time.time()
     dimension = int(math.sqrt(len(open[0].get_state())))
     moves = [UP, DOWN, LEFT, RIGHT]
     while open:
+        current_time= time.time()
+        #arreter si la solution est trop longue
+        if current_time - start_time > 5:
+            return []
         node = open.pop(0)
         if is_goal(node.get_state()):
             return node.get_path()
