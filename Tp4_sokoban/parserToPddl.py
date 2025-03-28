@@ -15,7 +15,9 @@ def parse_test_in(test_in):
 
     #parcourir le terrain et ajouter dans le init les positions des boites, joueurs, case vide et goal
     for y, line in enumerate(lines):
+        #print(f"Line {y}: {line}")
         for x, char in enumerate(line):
+            #print(f"Column {x}: {char}")
             pos_name = f"p{pos_counter}"
             if char == ' ':
                 init.append(f"(clear p{pos_counter})")
@@ -70,11 +72,12 @@ def parse_test_in(test_in):
                init.append(f"(adjacentgauche p{p} p{p2})")
            if [x,y+1] in tableposxy:
                p2 = tableposxy.index([x,y+1])
-               init.append(f"(adjacenthaut p{p} p{p2})")
+               init.append(f"(adjacentbas p{p} p{p2})")
            if [x,y-1] in tableposxy:
                p2 = tableposxy.index([x,y-1])
-               init.append(f"(adjacentbas p{p} p{p2})")
+               init.append(f"(adjacenthaut p{p} p{p2})")
     #print(init)
+    #affichier le plan avec tableposxy
 
     return objects, init, goal
 
