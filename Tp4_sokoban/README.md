@@ -31,3 +31,27 @@ java --add-opens java.base/java.lang=ALL-UNNAMED \
 Sorry ```mvn exec:java``` has still an open issue ("Directory src/main/resources/view/assets not found.")
 
 See planning solutions at http://localhost:8888/test.html
+
+
+//Utilisation du sokoban 
+
+//compiler mvn avec
+
+mvn install:install-file \
+   -Dfile=pddl4j-4.0.0.jar \
+   -DgroupId=fr.uga \
+   -DartifactId=pddl4j \
+   -Dversion=4.0.0 \
+   -Dpackaging=jar \
+   -DgeneratePom=true
+ ```  
+
+
+//lancer avec la comande suivant pour tester il demandera un fichier testX.json qui représente le niveau que l'on veut présent dans le répertoire config
+
+java --add-opens java.base/java.lang=ALL-UNNAMED \
+      -server -Xms2048m -Xmx2048m \
+      -cp "$(mvn dependency:build-classpath -Dmdep.outputFile=/dev/stdout -q):target/test-classes/:target/classes" \
+      sokoban.SokobanMain
+
+
