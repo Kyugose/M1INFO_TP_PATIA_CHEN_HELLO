@@ -23,6 +23,8 @@ BFS = 'bfs'
 DFS = 'dfs'
 ASTAR = 'astar'
 
+timeout= 90#1miniutes 30 secondes
+
 Algorithm = Literal['bfs', 'dfs', 'astar']
 
 def solve_bfs(open : List[Node]) -> Solution:
@@ -33,7 +35,7 @@ def solve_bfs(open : List[Node]) -> Solution:
     while open:
         current_time= time.time()
         #arreter si la solution est trop longue
-        if current_time - start_time > 5:
+        if current_time - start_time > timeout:
             return []
         node = open.pop(0)
         if is_goal(node.get_state()):
@@ -60,7 +62,7 @@ def solve_dfs(open: List[Node]) -> Solution:
     while open:
         current_time= time.time()
         #arreter si la solution est trop longue
-        if current_time - start_time > 5:
+        if current_time - start_time > timeout:
             return []
         node = open.pop(0)
         if is_goal(node.get_state()):
@@ -86,7 +88,7 @@ def solve_astar(open : List[Node], close : List[Node]) -> Solution:
     while open:
         current_time= time.time()
         #arreter si la solution est trop longue
-        if current_time - start_time > 5:
+        if current_time - start_time > timeout:
             return []
         node = open.pop(0)
         if is_goal(node.get_state()):
