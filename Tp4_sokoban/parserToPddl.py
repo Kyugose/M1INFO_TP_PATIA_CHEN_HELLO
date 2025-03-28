@@ -44,6 +44,12 @@ def parse_test_in(test_in):
                 tablepos.append([x, y,pos_counter])
                 objects.append(pos_name)
                 pos_counter += 1
+            elif char == '+':
+                goal.append(f"(box-at p{pos_counter})")
+                init.append(f"(player-at p{pos_counter})")
+                tablepos.append([x, y,pos_counter])
+                objects.append(pos_name)
+                pos_counter += 1
                     
     print(tablepos)
     #table avec que x y
