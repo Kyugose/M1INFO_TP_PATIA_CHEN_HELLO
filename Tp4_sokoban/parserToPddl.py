@@ -1,4 +1,6 @@
 import json
+import sys
+import os
 
 def parse_test_in(test_in):
     lines = test_in.strip().split('\n')
@@ -88,8 +90,15 @@ def generate_pddl_problem(title, objects, init, goal):
     return pddl_problem
 
 def main():
-    with open('config/test21.json') as f:
-        data = json.load(f)
+    
+    if len(sys.argv) != 2:
+        print("Usage: python3 parserToPddl.py <path_to_testX.json>")
+        sys.exit(1)
+        
+    json_file = sys.argv[1]
+    with open(json_file) as f:
+            data = json.load(f)
+            
     
     title = data['title']['2']
     test_in = data['testIn']
@@ -100,8 +109,22 @@ def main():
     objects, init, goal = parse_test_in(test_in)
     pddl_problem = generate_pddl_problem(title, objects, init, goal)
     
-    with open('test.pddl', 'w') as f:
+    #store le fichier pddl en testX.pddl avec le testX de l'argument
+    
+    nom=json_file.split(".")[0].split("/")[-1]
+    
+    # écrire le fichier pddl dans le répertoire "problems"
+    output_dir = "problemPDDL/"
+    output_path = output_dir + nom + ".pddl"
+    
+    # créer le répertoire s'il n'existe pas
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # écrire le fichier PDDL
+    with open(output_path, 'w') as f:
         f.write(pddl_problem)
+    
+    print(f"PDDL problem file written to: {output_path}")
 
 if __name__ == "__main__":
     main()
