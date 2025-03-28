@@ -1,47 +1,158 @@
 (define (domain sokoban)
-(:requirements :strips :typing)
-(:types player box wall position)
-(:predicates 
-        (player-at ?px ?py)
-        (box-at ?bx ?by)
-        (wall-at ?wx ?wy)
-        (adjacent ?px ?py ?px2 ?py2)
+    (:requirements :strips :typing)
+    (:types position)
+    (:predicates 
+        (player-at ?p - position)
+        (box-at ?p - position)
+        (adjacentdroit ?p1 ?p2 - position)
+        (adjacenthaut ?p1 ?p2 - position)
+        (adjacentbas ?p1 ?p2 - position)
+        (adjacentgauche ?p1 ?p2 - position)
+        (clear ?p - position)
     )
     
-    (:action move-right
-        :parameters (?px ?py ?px2 ?py2)
-        :precondition (and (player-at ?px ?py) 
-                        (adjacent ?px ?py ?px2 ?py2) 
-                        (not (wall-at ?px2 ?py2)) 
-                        (not (box-at ?px2 ?py2)))
-        :effect (and 
-            (not (player-at ?px ?py)) 
-            (player-at ?px2 ?py2)
-        )
+    (:action moveup
+        :parameters (?p1 ?p2 - position)
+        :precondition 
+            (and
+                (player-at ?p1) 
+                (clear ?p2)
+                (adjacenthaut ?p1 ?p2)
+            )
+        :effect 
+            (and
+                (not (player-at ?p1)) 
+                (player-at ?p2)
+                (clear ?p1)
+            )
     )
 
+    (:action movedown
+        :parameters (?p1 ?p2 - position)
+        :precondition 
+            (and
+                (player-at ?p1) 
+                (clear ?p2)
+                (adjacentbas ?p1 ?p2)
+            )
+        :effect 
+            (and
+                (not (player-at ?p1)) 
+                (player-at ?p2)
+                (clear ?p1)
+            )
+    )
 
-    (:action push-up
-        :parameters (?px ?py ?bx ?by ?bx2 ?by2)
-        :precondition (and (player-at ?px ?py) (box-at ?bx ?by) (adjacent ?px ?py ?bx ?by) (adjacent ?bx ?by ?bx2 ?by2) (not (wall-at ?bx2 ?by2)) (not (box-at ?bx2 ?by2)))
-        :effect (and (not (box-at ?bx ?by)) (box-at ?bx2 ?by2) (not (player-at ?px ?py)) (player-at ?bx ?by))
+    (:action moveleft
+        :parameters (?p1 ?p2 - position)
+        :precondition 
+            (and
+                (player-at ?p1) 
+                (clear ?p2)
+                (adjacentgauche ?p1 ?p2)
+            )
+        :effect 
+            (and
+                (not (player-at ?p1)) 
+                (player-at ?p2)
+                (clear ?p1)
+            )
     )
-    
-    (:action push-down
-        :parameters (?px ?py ?bx ?by ?bx2 ?by2)
-        :precondition (and (player-at ?px ?py) (box-at ?bx ?by) (adjacent ?px ?py ?bx ?by) (adjacent ?bx ?by ?bx2 ?by2) (not (wall-at ?bx2 ?by2)) (not (box-at ?bx2 ?by2)))
-        :effect (and (not (box-at ?bx ?by)) (box-at ?bx2 ?by2) (not (player-at ?px ?py)) (player-at ?bx ?by))
+
+    (:action moveright
+        :parameters (?p1 ?p2 - position)
+        :precondition 
+            (and
+                (player-at ?p1) 
+                (clear ?p2)
+                (adjacentdroit ?p1 ?p2)
+            )
+        :effect 
+            (and
+                (not (player-at ?p1)) 
+                (player-at ?p2)
+                (clear ?p1)
+            )
     )
-    
-    (:action push-left
-        :parameters (?px ?py ?bx ?by ?bx2 ?by2)
-        :precondition (and (player-at ?px ?py) (box-at ?bx ?by) (adjacent ?px ?py ?bx ?by) (adjacent ?bx ?by ?bx2 ?by2) (not (wall-at ?bx2 ?by2)) (not (box-at ?bx2 ?by2)))
-        :effect (and (not (box-at ?bx ?by)) (box-at ?bx2 ?by2) (not (player-at ?px ?py)) (player-at ?bx ?by))
+
+    (:action pushup
+        :parameters (?p1 ?p2 ?p3 - position)
+        :precondition 
+            (and 
+                (player-at ?p1) 
+                (box-at ?p2) 
+                (adjacenthaut ?p1 ?p2) 
+                (adjacenthaut ?p2 ?p3) 
+                (clear ?p3)
+            )
+        :effect 
+            (and 
+                (not (box-at ?p2)) 
+                (box-at ?p3) 
+                (not (player-at ?p1)) 
+                (player-at ?p2)
+                (clear ?p1)
+            )
     )
-    
-    (:action push-right
-        :parameters (?px ?py ?bx ?by ?bx2 ?by2)
-        :precondition (and (player-at ?px ?py) (box-at ?bx ?by) (adjacent ?px ?py ?bx ?by) (adjacent ?bx ?by ?bx2 ?by2) (not (wall-at ?bx2 ?by2)) (not (box-at ?bx2 ?by2)))
-        :effect (and (not (box-at ?bx ?by)) (box-at ?bx2 ?by2) (not (player-at ?px ?py)) (player-at ?bx ?by))
+
+    (:action pushdown
+        :parameters (?p1 ?p2 ?p3 - position)
+        :precondition 
+            (and 
+                (player-at ?p1) 
+                (box-at ?p2) 
+                (adjacentbas ?p1 ?p2) 
+                (adjacentbas ?p2 ?p3) 
+                (clear ?p3)
+            )
+        :effect 
+            (and 
+                (not (box-at ?p2)) 
+                (box-at ?p3) 
+                (not (player-at ?p1)) 
+                (player-at ?p2)
+                (clear ?p1)
+            )
     )
+
+    (:action pushleft
+        :parameters (?p1 ?p2 ?p3 - position)
+        :precondition 
+            (and 
+                (player-at ?p1) 
+                (box-at ?p2) 
+                (adjacentgauche ?p1 ?p2) 
+                (adjacentgauche ?p2 ?p3) 
+                (clear ?p3)
+            )
+        :effect 
+            (and 
+                (not (box-at ?p2)) 
+                (box-at ?p3) 
+                (not (player-at ?p1)) 
+                (player-at ?p2)
+                (clear ?p1)
+            )
+    )
+
+    (:action pushright
+        :parameters (?p1 ?p2 ?p3 - position)
+        :precondition 
+            (and 
+                (player-at ?p1) 
+                (box-at ?p2) 
+                (adjacentdroit ?p1 ?p2) 
+                (adjacentdroit ?p2 ?p3) 
+                (clear ?p3)
+            )
+        :effect 
+            (and 
+                (not (box-at ?p2)) 
+                (box-at ?p3) 
+                (not (player-at ?p1)) 
+                (player-at ?p2)
+                (clear ?p1)
+            )
+    )
+
 )

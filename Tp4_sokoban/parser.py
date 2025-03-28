@@ -5,25 +5,23 @@ def parse_test_in(test_in):
     objects = []
     init = []
     goal = []
-    positions = {}
     pos_counter = 1
 
     for y, line in enumerate(lines):
         for x, char in enumerate(line):
             pos_name = f"p{pos_counter}"
-            positions[(x, y)] = pos_name
             objects.append(pos_name)
             if char == '@':
-                init.append(f"(player-at {pos_name})")
+                init.append(f"(player-at p{pos_counter})")
             elif char == '#':
-                init.append(f"(wall-at {pos_name})")
+                init.append(f"(wall-at p{pos_counter})")
             elif char == '.':
-                goal.append(f"(goal-at {pos_name})")
+                goal.append(f"(box-at p{pos_counter})")
             elif char == '$':
-                init.append(f"(box-at {pos_name})")
+                init.append(f"(box-at p{pos_counter})")
             elif char == '*':
-                init.append(f"(box-at {pos_name})")
-                goal.append(f"(goal-at {pos_name})")
+                init.append(f"(box-at p{pos_counter})")
+                goal.append(f"(box-at p{pos_counter})")
             pos_counter += 1
 
     return objects, init, goal
@@ -32,8 +30,6 @@ def generate_pddl_problem(title, objects, init, goal):
     pddl_problem = f"(define (problem {title.replace(' ', '-')})\n"
     pddl_problem += "  (:domain sokoban)\n"
     pddl_problem += "  (:objects\n"
-    pddl_problem += "    player - player\n"
-    pddl_problem += "    box - box\n"
     pddl_problem += "    " + " ".join(objects) + " - position\n"
     pddl_problem += "  )\n"
     pddl_problem += "  (:init\n"
@@ -48,16 +44,19 @@ def generate_pddl_problem(title, objects, init, goal):
     return pddl_problem
 
 def main():
-    with open('/home/chene/sokoban/config/test21.json') as f:
+    with open('config/test21.json') as f:
         data = json.load(f)
     
     title = data['title']['2']
     test_in = data['testIn']
     
+    #afficher le terrain
+    print(test_in)
+    
     objects, init, goal = parse_test_in(test_in)
     pddl_problem = generate_pddl_problem(title, objects, init, goal)
     
-    with open('problem.pddl', 'w') as f:
+    with open('test.pddl', 'w') as f:
         f.write(pddl_problem)
 
 if __name__ == "__main__":

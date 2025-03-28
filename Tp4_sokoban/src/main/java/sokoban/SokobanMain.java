@@ -1,6 +1,7 @@
 package sokoban;
 
 import com.codingame.gameengine.runner.SoloGameRunner;
+import java.util.Scanner;
 
 public class SokobanMain {
     public static void main(String[] args) {

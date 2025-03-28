@@ -1,34 +1,56 @@
-(define (problem sokoban-problem)
-    (:domain sokoban)
-    
-    (:objects
-        p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 - position
-        player1 - player
-        box1 box2 - box
-        wall1 wall2 wall3 wall4 - wall
+(define (problem Scoria-3---Level-1)
+  (:domain sokoban)
+  (:objects
+    p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 p16 p17 p18 p19 p20 p21 p22 p23 p24 p25 p26 p27 p28 p29 p30 p31 p32 p33 p34 p35 p36 p37 p38 p39 p40 p41 p42 p43 p44 p45 p46 p47 p48 p49 p50 p51 p52 p53 p54 p55 p56 p57 p58 p59 p60 p61 p62 p63 p64 p65 - position
+  )
+  (:init
+    (wall-at p1)
+    (wall-at p2)
+    (wall-at p3)
+    (wall-at p4)
+    (wall-at p7)
+    (wall-at p10)
+    (wall-at p12)
+    (wall-at p13)
+    (wall-at p16)
+    (wall-at p17)
+    (wall-at p18)
+    (wall-at p22)
+    (wall-at p23)
+    (box-at p25)
+    (box-at p27)
+    (wall-at p28)
+    (wall-at p29)
+    (wall-at p30)
+    (player-at p31)
+    (wall-at p32)
+    (box-at p33)
+    (box-at p34)
+    (wall-at p36)
+    (wall-at p37)
+    (wall-at p38)
+    (wall-at p39)
+    (box-at p41)
+    (wall-at p47)
+    (wall-at p48)
+    (wall-at p49)
+    (wall-at p50)
+    (wall-at p51)
+    (wall-at p56)
+    (wall-at p60)
+    (wall-at p61)
+    (wall-at p62)
+    (wall-at p63)
+    (wall-at p64)
+    (wall-at p65)
+  )
+  (:goal
+    (and
+      (box-at p21)
+      (box-at p25)
+      (box-at p27)
+      (box-at p34)
+      (box-at p41)
     )
-    
-    (:init
-        (player-at p1 p1)
-        (box-at p2 p2)
-        (box-at p3 p3)
-        (wall-at p4 p4)
-        (wall-at p5 p5)
-        (adjacent p1 p1 p2 p2)
-        (adjacent p2 p2 p3 p3)
-        (adjacent p3 p3 p4 p4)
-        (adjacent p4 p4 p5 p5)
-        (adjacent p5 p5 p6 p6)
-        (adjacent p6 p6 p7 p7)
-        (adjacent p7 p7 p8 p8)
-        (adjacent p8 p8 p9 p9)
-        (adjacent p9 p9 p10 p10)
-    )
-    
-    (:goal
-        (and
-            (box-at p6 p6)
-            (box-at p7 p7)
-        )
-    )
+  )
 )
