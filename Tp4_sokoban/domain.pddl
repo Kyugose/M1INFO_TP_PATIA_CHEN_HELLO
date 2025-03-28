@@ -23,6 +23,7 @@
             (and
                 (not (player-at ?p1)) 
                 (player-at ?p2)
+                (not (clear ?p2))
                 (clear ?p1)
             )
     )
@@ -39,6 +40,7 @@
             (and
                 (not (player-at ?p1)) 
                 (player-at ?p2)
+                (not (clear ?p2))
                 (clear ?p1)
             )
     )
@@ -56,6 +58,7 @@
                 (not (player-at ?p1)) 
                 (player-at ?p2)
                 (clear ?p1)
+                (not (clear ?p2))
             )
     )
 
@@ -72,6 +75,7 @@
                 (not (player-at ?p1)) 
                 (player-at ?p2)
                 (clear ?p1)
+                (not (clear ?p2))
             )
     )
 
@@ -92,6 +96,7 @@
                 (not (player-at ?p1)) 
                 (player-at ?p2)
                 (clear ?p1)
+                (not (clear ?p3))
             )
     )
 
@@ -112,6 +117,7 @@
                 (not (player-at ?p1)) 
                 (player-at ?p2)
                 (clear ?p1)
+                (not (clear ?p3))
             )
     )
 
@@ -132,6 +138,7 @@
                 (not (player-at ?p1)) 
                 (player-at ?p2)
                 (clear ?p1)
+                (not (clear ?p3))
             )
     )
 
@@ -152,6 +159,7 @@
                 (not (player-at ?p1)) 
                 (player-at ?p2)
                 (clear ?p1)
+                (not (clear ?p3))
             )
     )
 

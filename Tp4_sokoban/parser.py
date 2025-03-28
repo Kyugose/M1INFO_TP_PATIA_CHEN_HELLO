@@ -5,24 +5,68 @@ def parse_test_in(test_in):
     objects = []
     init = []
     goal = []
-    pos_counter = 1
+    pos_counter = 0
+    tablepos = []
+    
+    
+    print(lines)
 
+    #parcourir le terrain et ajouter dans le init les positions des boites, joueurs, case vide et goal
     for y, line in enumerate(lines):
         for x, char in enumerate(line):
             pos_name = f"p{pos_counter}"
-            objects.append(pos_name)
+            if char == ' ':
+                init.append(f"(clear p{pos_counter})")
+                tablepos.append([x, y,pos_counter])
+                objects.append(pos_name)
+                pos_counter += 1
             if char == '@':
                 init.append(f"(player-at p{pos_counter})")
-            elif char == '#':
-                init.append(f"(wall-at p{pos_counter})")
+                tablepos.append([x, y,pos_counter])
+                objects.append(pos_name)
+                pos_counter += 1
             elif char == '.':
                 goal.append(f"(box-at p{pos_counter})")
+                init.append(f"(clear p{pos_counter})")
+                tablepos.append([x, y,pos_counter])
+                objects.append(pos_name)
+                pos_counter += 1
             elif char == '$':
                 init.append(f"(box-at p{pos_counter})")
+                tablepos.append([x, y,pos_counter])
+                objects.append(pos_name)
+                pos_counter += 1
             elif char == '*':
                 init.append(f"(box-at p{pos_counter})")
                 goal.append(f"(box-at p{pos_counter})")
-            pos_counter += 1
+                tablepos.append([x, y,pos_counter])
+                objects.append(pos_name)
+                pos_counter += 1
+                    
+    print(tablepos)
+    #table avec que x y
+    tableposxy = [[x,y] for x,y,p in tablepos]
+    #print(tableposxy)
+    #ajouter les adjacents haut bas gauche droite
+    for case in tablepos:
+        if case == 0:
+            continue
+        else:
+           x,y,p=case
+           #print(x,y,p)
+           if [x+1,y] in tableposxy:
+               p2 = tableposxy.index([x+1,y])
+               init.append(f"(adjacentdroit p{p} p{p2})")
+           if [x-1,y] in tableposxy:
+               p2 = tableposxy.index([x-1,y])
+               init.append(f"(adjacentgauche p{p} p{p2})")
+           if [x,y+1] in tableposxy:
+               p2 = tableposxy.index([x,y+1])
+               init.append(f"(adjacenthaut p{p} p{p2})")
+           if [x,y-1] in tableposxy:
+               p2 = tableposxy.index([x,y-1])
+               init.append(f"(adjacentbas p{p} p{p2})")
+    #print(init)
 
     return objects, init, goal
 
