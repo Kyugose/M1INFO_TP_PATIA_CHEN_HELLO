@@ -15,7 +15,7 @@ public class SokobanMain {
         String fichier = in.nextLine();
         gameRunner.setTestCase(fichier);
 
-        int timeout=3;
+        String timeout="600";
 
        try {
             // Exécution du script Python parserToPddl.py qui génère le fichier PDDL
@@ -33,8 +33,23 @@ public class SokobanMain {
             e.printStackTrace();
             return;
         }
+        
+        try {
+            String command = "python3 parserToSeqMov.py domain.pddl problemPDDL/" + fichier.replace(".json", ".pddl") + " " + timeout;
+            ProcessBuilder pb = new ProcessBuilder(command.split(" "));
+            pb.inheritIO(); // Pour afficher les sorties du script Python dans la console
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+            System.err.println("Erreur lors de l'exécution du script Python parserToSeqMov.py");
+            return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
 
-        gameRunner.setAgent("python3 parserToSeqMov.py domain.pddl problemPDDL/" + fichier.replace(".json", ".pddl") + " " + timeout);
+        gameRunner.setAgent("python3 afficheSeq.py SeqMov/" + fichier.replace(".json", ""));
         
         gameRunner.start(4200);
     }

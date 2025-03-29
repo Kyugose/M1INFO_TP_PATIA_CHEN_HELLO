@@ -59,9 +59,6 @@ def parse_test_in(test_in):
     #print(tableposxy)
     #ajouter les adjacents haut bas gauche droite
     for case in tablepos:
-        if case == 0:
-            continue
-        else:
            x,y,p=case
            #print(x,y,p)
            if [x+1,y] in tableposxy:

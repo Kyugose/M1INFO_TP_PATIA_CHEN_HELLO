@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import os
 
 def run_pddl4(domain_file, problem_file, timeout, heuristic="FAST_FORWARD"):
         # Commande Java pour exécuter le solveur PDDL4J avec FAST_FORWARD
@@ -47,6 +48,15 @@ def run_pddl4(domain_file, problem_file, timeout, heuristic="FAST_FORWARD"):
             print(mouvement)
         else:
             print("")
+
+        problem_file_base = problem_file.rsplit("/", 1)[-1].rsplit(".pddl", 1)[0]
+        output_dir = "SeqMov/"
+        
+        # Create the directory if it doesn't exist
+        os.makedirs(output_dir, exist_ok=True)
+        
+        with open(os.path.join(output_dir, problem_file_base), "w") as file:
+            file.write(mouvement)
         
         
                 
@@ -55,7 +65,7 @@ def run_pddl4(domain_file, problem_file, timeout, heuristic="FAST_FORWARD"):
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
-        print("Usage: python parserResultPddl.py <domain_file> <problem_file> <timeout>")
+        print("Usage: python parserToSeqMov.py <domain_file> <problem_file> <timeout>")
     else:
         domain_file = sys.argv[1]
         problem_file = sys.argv[2]
