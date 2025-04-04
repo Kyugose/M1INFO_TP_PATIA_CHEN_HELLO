@@ -76,23 +76,24 @@ public final class SATEncoding {
         final BitVector init = problem.getInitialState().getPositiveFluents();
         
         // TO BE DONE!
+
+        //les clauses de l'init
         for (int i = 0; i < nb_fluents; i++) {
+            //possible fluent
             if (init.get(i)) {
                 List<Integer> clause = new ArrayList<Integer>();
                 clause.add(pair(i + 1, 1));
                 this.initList.add(clause);
             }
             else{
+                //négatif fluent
                 List<Integer> clause = new ArrayList<Integer>();
                 clause.add(-pair(i + 1, 1));
                 this.initList.add(clause);
             }
         }
 
-        // Encoding of goal
-        // Goal state step is steps
-        // We get the goal state from the planning problem
-        // Goal is a bit vector where the ith bit at 1 corresponds to the ith fluent being true
+        //goal on reucpère le bitvector de l'objectif
         final BitVector goal = problem.getGoal().getPositiveFluents();
 
         for(int i = 0; i < nb_fluents; i++){
@@ -105,7 +106,41 @@ public final class SATEncoding {
         }
         
 
-        // Encoding of actions
+        // Actions : préconditions and effects
+        for (int i = 0; i < problem.getActions().size(); i++) {
+            Action action = problem.getActions().get(i);
+            List<Integer> clause = new ArrayList<Integer>();
+            List<Integer> effect = new ArrayList<Integer>();
+            this.actionPreconditionList.add(clause);
+            this.actionEffectList.add(effect);
+        }
+
+        // State transitions
+
+        for(int i=0; i< problem.getActions().size(); i++){
+            Action action = problem.getActions().get(i);
+            List<Integer> clause = new ArrayList<Integer>();
+            List<Integer> add = new ArrayList<Integer>();
+            List<Integer> del = new ArrayList<Integer>();
+            for (int j = 0; j < action.getConditionalEffects().size(); j++) {
+                System.out.println("fluent = " +  action.getConditionalEffects().toString());
+            }
+            this.addList.put(i, add);
+            this.delList.put(i, del);
+        }
+
+        //actions disjunctions
+        for (int i=0 ; i< problem.getActions().size(); i++){
+            Action action = problem.getActions().get(i);
+            List<Integer> clause = new ArrayList<Integer>();
+            for (int j = 0; j < action.getConditionalEffects().size(); j++) {
+    
+            }
+            this.actionDisjunctionList.add(clause);
+        }
+
+
+
 
 
         // Makes DIMACS encoding from 1 to steps
