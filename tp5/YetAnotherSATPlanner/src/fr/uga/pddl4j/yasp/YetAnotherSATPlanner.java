@@ -103,6 +103,7 @@ public class YetAnotherSATPlanner extends AbstractStateSpacePlanner {
             while (doSearch && !(steps > stepmax)) {
                 
                 // TO BE DONE!
+                break;
             }
         }
         return plan;

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 /**
  * This class implements a planning problem/domain encoding into DIMACS
  *
@@ -111,6 +112,20 @@ public final class SATEncoding {
             Action action = problem.getActions().get(i);
             List<Integer> clause = new ArrayList<Integer>();
             List<Integer> effect = new ArrayList<Integer>();
+            //System.out.println("action = " + action.toString());
+            System.out.println("action precondition = " + action.getPrecondition().toString());
+            System.out.println("action effect = " + action.getPrecondition().getPositiveFluents());
+            if(action.getPrecondition().getPositiveFluents() != null){
+                for (int j = 0; j < action.getPrecondition().getPositiveFluents().size(); j++) {
+                    //System.out.println("fluent = " + action.getPrecondition().getPositiveFluents().get(j));
+                    if (action.getPrecondition().getPositiveFluents().get(j)) {
+                        clause.add(pair(j + 1, 1));
+                    } else {
+                        clause.add(-pair(j + 1, 1));
+                    }
+                }
+            }
+
             this.actionPreconditionList.add(clause);
             this.actionEffectList.add(effect);
         }
@@ -122,9 +137,7 @@ public final class SATEncoding {
             List<Integer> clause = new ArrayList<Integer>();
             List<Integer> add = new ArrayList<Integer>();
             List<Integer> del = new ArrayList<Integer>();
-            for (int j = 0; j < action.getConditionalEffects().size(); j++) {
-                System.out.println("fluent = " +  action.getConditionalEffects().toString());
-            }
+
             this.addList.put(i, add);
             this.delList.put(i, del);
         }
@@ -141,6 +154,14 @@ public final class SATEncoding {
 
 
 
+        //affchier les clauses
+
+        System.out.println("init clauses = " + this.initList);
+        System.out.println("goal clauses = " + this.goalList);
+        System.out.println("action precondition clauses = " + this.actionPreconditionList);
+        System.out.println("action effect clauses = " + this.actionEffectList);
+        System.out.println("state transition clauses = " + this.stateTransitionList);
+        System.out.println("action disjunction clauses = " + this.actionDisjunctionList);
 
 
         // Makes DIMACS encoding from 1 to steps
