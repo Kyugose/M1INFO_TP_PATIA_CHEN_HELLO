@@ -1,0 +1,1 @@
+Nous avons tenter de faire les todos en intégrant l'encodage SAT du cours mais nous n'avons pas reussi a le faire fonctionner.
