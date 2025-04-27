@@ -1,109 +1,97 @@
-from solve_npuzzle import (load_puzzle,
-                           solve_astar,
-                           solve_bfs,
-                           solve_dfs,
-                           is_solution,
-                     )
+from solve_npuzzle import (
+    load_puzzle,
+    solve_astar,
+    solve_bfs,
+    solve_dfs,
+    is_solution,
+)
 from node import Node
 import time
 import os
+import numpy as np
+import matplotlib.pyplot as plt
 
-#lance dfs bfs et astar sur tout les fichiers du dossier puzzles et compare les performances
 def main():
     print('Start')
-    total_dfs = 0
-    total_bfs = 0
-    total_astar = 0
+    total_dfs = 0.0
+    total_bfs = 0.0
+    total_astar = 0.0
+
     list_time_bfs = []
     list_time_dfs = []
     list_time_astar = []
+
+    # Parcours des fichiers de puzzle
     for file in os.listdir('puzzle'):
+        if not file.endswith('.txt'):
+            continue
 
-            puzzle = load_puzzle(f'puzzle/{file}')
-            #obtenir le nombre sequence max pour résoudre le puzzle présent dans le nom du fichier
-            max_sequence = int(int(file.split('_len')[1].split('.')[0])/10)
-            print("max_sequence",max_sequence)
-            root = Node(state = puzzle, move = None)
-            open = [root]
-            print(f'Puzzle: {file}')
-            start = time.time()
-            s=solve_bfs(open)
-            end = time.time()
-            print(f'BFS: {end - start}')
-            list_time_bfs.append([end - start, max_sequence])
-            total_bfs += end - start
-            if s:
-                print('Valid solution:', is_solution(puzzle, s))
-            else:
-                print('No solution')
-            start = time.time()
-            open = [root]
-            s=solve_dfs(open)
-            end = time.time()
-            list_time_dfs.append([end - start, max_sequence])
-            total_dfs += end - start
-            if s:
-                print('Valid solution:', is_solution(puzzle, s))
-            else:
-                print('No solution')
-            print(f'DFS: {end - start}')
-            start = time.time()
-            open = [root]
-            s=solve_astar(open,[])
-            end = time.time()
-            list_time_astar.append([end - start, max_sequence])
-            total_astar += end - start
-            if s:
-                print('Valid solution:', is_solution(puzzle, s))
-            else:
-                print('No solution')
-            print(f'A*: {end - start}')
-            print()
-            
-    #trie les listes de temps en fonction de la sequence max
-    list_time_bfs.sort(key=lambda x: x[1])
-    list_time_dfs.sort(key=lambda x: x[1])
-    list_time_astar.sort(key=lambda x: x[1])
-    #liste des temps pour chaque sequence max
-    print("Liste des temps pour chaque sequence max")
-    print("BFS",list_time_bfs)
-    print("DFS",list_time_dfs)
-    print("A*",list_time_astar)    
-    #temps total pour chaque algo
-    print(f'Total BFS: {total_bfs}')
-    print(f'Total DFS: {total_dfs}')
-    print(f'Total A*: {total_astar}')
-    
-    #afficer en courbe les temps d'execution
-    import matplotlib.pyplot as plt
+        puzzle = load_puzzle(f'puzzle/{file}')
+        max_sequence = int(int(file.split('_len')[1].split('.')[0]) / 10)
+        d = int(len(puzzle) ** 0.5)
 
-    # Données de performance (exemple)
-    algorithms = ['BFS', 'DFS', 'A*']
-    performance = [total_bfs, total_dfs, total_astar]
+        print(f'Puzzle: {file} (dimension {d}x{d}, max_sequence {max_sequence})')
 
-    # Tracer la courbe de performance plusieur courbe en fonction des algorithmes
-    plt.plot(algorithms, performance)
+        root = Node(state=puzzle, move=None)
 
-    # Ajouter des labels et un titre
-    plt.xlabel('Algorithmes')
-    plt.ylabel('Temps total (s)')
-    plt.title('Courbe de performance des algorithmes de recherche')
-    
-    #tracer 3 courbes pour chaque algo dans une autre fenetre
-    plt.figure()
-    plt.plot([x[1] for x in list_time_bfs], [x[0] for x in list_time_bfs], label='BFS')
-    plt.plot([x[1] for x in list_time_dfs], [x[0] for x in list_time_dfs], label='DFS')
-    plt.plot([x[1] for x in list_time_astar], [x[0] for x in list_time_astar], label='A*')
-    
-    # Ajouter des labels et un titre
-    plt.xlabel('Sequence max')
-    plt.ylabel('Temps (s)')
-    plt.title('Courbe de performance des algorithmes de recherche')
+        # BFS
+        start = time.time()
+        sol_bfs = solve_bfs([root])
+        duration = time.time() - start
+        total_bfs += duration
+        list_time_bfs.append((max_sequence, d, total_bfs))
+        print(f'  BFS: {duration:.4f}s, valid: {is_solution(puzzle, sol_bfs) if sol_bfs else False}')
+
+        # DFS
+        start = time.time()
+        sol_dfs = solve_dfs([root])
+        duration = time.time() - start
+        total_dfs += duration
+        list_time_dfs.append((max_sequence, d, total_dfs))
+        print(f'  DFS: {duration:.4f}s, valid: {is_solution(puzzle, sol_dfs) if sol_dfs else False}')
+
+        # A*
+        start = time.time()
+        sol_astar = solve_astar([root], [])
+        duration = time.time() - start
+        total_astar += duration
+        list_time_astar.append((max_sequence, d, total_astar))
+        print(f'  A*:  {duration:.4f}s, valid: {is_solution(puzzle, sol_astar) if sol_astar else False}')
+
+        print()
+
+    # Affichage des totaux
+    print(f'Total BFS:  {total_bfs:.4f}s')
+    print(f'Total DFS:  {total_dfs:.4f}s')
+    print(f'Total A*:   {total_astar:.4f}s')
+
+    list_time_bfs.sort(key=lambda x: (x[0], x[1]))
+    list_time_dfs.sort(key=lambda x: (x[0], x[1]))
+    list_time_astar.sort(key=lambda x: (x[0], x[1]))
+
+    difficulty_bfs   = [(seq * dim) // 100 * 100 for seq, dim, _ in list_time_bfs]
+    difficulty_dfs   = [(seq * dim) // 100 * 100 for seq, dim, _ in list_time_dfs]
+    difficulty_astar = [(seq * dim) // 100 * 100 for seq, dim, _ in list_time_astar]
+
+    times_bfs   = [t for _, _, t in list_time_bfs]
+    times_dfs   = [t for _, _, t in list_time_dfs]
+    times_astar = [t for _, _, t in list_time_astar]
+
+    cumul_bfs   = np.cumsum(times_bfs)
+    cumul_dfs   = np.cumsum(times_dfs)
+    cumul_astar = np.cumsum(times_astar)
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(difficulty_bfs,   cumul_bfs,   label='BFS ', color='red', marker='^')
+    plt.plot(difficulty_dfs,   cumul_dfs,   label='DFS ', color='blue', marker='s')
+    plt.plot(difficulty_astar, cumul_astar, label='A*', color='green', marker='o')
+
+    plt.xlabel('Difficulté (max_sequence × dimension)')
+    plt.ylabel('Temps total cumulé (secondes)')
+    plt.title('Courbes de temps total cumulé par algorithme')
     plt.legend()
-
-    # Afficher la courbe
+    plt.grid(True)
     plt.show()
-
 
 if __name__ == '__main__':
     main()

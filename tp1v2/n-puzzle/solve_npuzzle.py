@@ -23,7 +23,7 @@ BFS = 'bfs'
 DFS = 'dfs'
 ASTAR = 'astar'
 
-timeout= 90#1miniutes 30 secondes
+timeout= 180
 
 Algorithm = Literal['bfs', 'dfs', 'astar']
 
